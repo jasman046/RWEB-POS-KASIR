@@ -1,0 +1,240 @@
+@extends('layouts.app')
+
+@section('title', 'Checkout - ASgor')
+
+@section('extra_css')
+<style>
+    /* Menyembunyikan keranjang bawaan dari layout utama khusus di halaman ini */
+    .cart-container {
+        display: none !important;
+    }
+    
+    /* Mereset margin agar form checkout tampil penuh dan rapi ke tengah */
+    .checkout-container {
+        margin-right: 0 !important;
+        max-width: 1100px; 
+        margin: 0 auto;
+        gap: 40px; /* Sedikit memperlebar jarak antara list order dan form payment */
+    }
+</style>
+@endsection
+
+@section('content')
+<div class="checkout-container">
+    <div class="checkout-order-section">
+        <h2 class="form-section-title">Orders #002</h2>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button class="tab-btn active" id="dineInBtn" onclick="selectOrderType('Dine In')">Dine In</button>
+            <button class="tab-btn" id="deliveryBtn" onclick="selectOrderType('Delivery')">Delivery</button>
+        </div>
+
+        <div id="orderItems" style="margin-bottom: 20px;">
+            @foreach($cart as $item)
+                <div class="cart-item" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #393C49;">
+                    <div style="display: flex; gap: 10px; flex: 1;">
+                        <div class="cart-item-image">
+                            <img src="{{ isset($item['image']) ? asset('storage/' . $item['image']) : 'https://via.placeholder.com/49x50' }}" alt="{{ $item['name'] }}">
+                        </div>
+                        <div>
+                            <div class="product-name">{{ $item['name'] }}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <div style="width: 60px; text-align: center;">
+                            <button onclick="updateQty({{ $item['product_id'] }}, -1)" style="width: 20px; height: 20px; border: none; background: white; color: #1814F3; cursor: pointer; font-weight: bold;">-</button>
+                            <span style="display: inline-block; margin: 0 5px; width: 20px;">{{ $item['quantity'] }}</span>
+                            <button onclick="updateQty({{ $item['product_id'] }}, 1)" style="width: 20px; height: 20px; border: none; background: white; color: #1814F3; cursor: pointer; font-weight: bold;">+</button>
+                        </div>
+                        <div style="width: 80px; text-align: right;">Rp {{ number_format($item['price'], 0, ',', '.') }}</div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <div style="border-top: 1px solid #393C49; border-bottom: 1px solid #393C49; padding: 15px 0; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between;">
+                <span>Sub total</span>
+                <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
+            </div>
+        </div>
+
+        <button class="checkout-btn" onclick="continueToPay()">Continue to Payment</button>
+    </div>
+
+    <div class="checkout-payment-section">
+        <h2 class="form-section-title">Payment</h2>
+        <p class="form-section-subtitle">Methods</p>
+
+        <div class="payment-methods">
+            <div class="payment-method active" onclick="selectPayment('Credit Card', this)">
+                <div style="width: 24px; height: 24px; margin: 0 auto 5px; background-color: #0075FF; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-credit-card" style="color: white; font-size: 12px;"></i>
+                </div>
+                <div class="payment-method-label">Credit Card</div>
+            </div>
+            <div class="payment-method" onclick="selectPayment('QRIS', this)">
+                <div style="width: 24px; height: 24px; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-qrcode" style="color: #ABBBC2; font-size: 16px;"></i>
+                </div>
+                <div class="payment-method-label">QRIS</div>
+            </div>
+            <div class="payment-method" onclick="selectPayment('Cash', this)">
+                <div style="width: 24px; height: 24px; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-money-bill" style="color: #ABBBC2; font-size: 16px;"></i>
+                </div>
+                <div class="payment-method-label">Cash</div>
+            </div>
+        </div>
+
+        <form id="paymentForm" onsubmit="submitPayment(event)">
+            <div id="creditCardSection">
+                <div class="form-group">
+                    <label class="form-label">Cardholder Name</label>
+                    <input type="text" class="form-input" id="cardholderName" name="cardholder_name" placeholder="Einhar">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Card Number</label>
+                    <input type="text" class="form-input" id="cardNumber" name="card_number" placeholder="1704 2005 2300 1845">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Expiration Date</label>
+                        <input type="text" class="form-input" id="expirationDate" name="expiration_date" placeholder="02/2022">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CVV</label>
+                        <input type="password" class="form-input" id="cvv" name="cvv" placeholder="•••">
+                    </div>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid #393C49; padding-top: 20px; margin-top: 20px;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Order Type</label>
+                        <select class="form-input" id="orderType" name="order_type" style="background-color: #0075FF; color: white; cursor: pointer;" onchange="handleOrderType(this.value)">
+                            <option value="Dine In">Dine In</option>
+                            <option value="Delivery">Delivery</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Table no.</label>
+                        <input type="number" class="form-input" id="tableNumber" name="table_number" placeholder="04" style="background-color: #0075FF; color: white;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid #393C49; border-bottom: 1px solid #393C49; padding: 20px 0; margin: 20px 0;">
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" class="btn-cancel" onclick="goBack()">Cancel</button>
+                <button type="submit" class="btn-confirm">Confirm Payment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let selectedPaymentMethod = 'Credit Card';
+    let selectedOrderType = 'Dine In';
+
+    function selectPayment(method, element) {
+        selectedPaymentMethod = method;
+        document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+
+        const creditCardSection = document.getElementById('creditCardSection');
+        if (method === 'Credit Card') {
+            creditCardSection.style.display = 'block';
+        } else {
+            creditCardSection.style.display = 'none';
+        }
+    }
+
+    function selectOrderType(type) {
+        selectedOrderType = type;
+        document.getElementById('orderType').value = type;
+
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        if (type === 'Dine In') {
+            document.getElementById('dineInBtn').classList.add('active');
+        } else {
+            document.getElementById('deliveryBtn').classList.add('active');
+        }
+
+        handleOrderType(type);
+    }
+
+    function handleOrderType(type) {
+        const tableInput = document.getElementById('tableNumber');
+        if (type === 'Dine In') {
+            tableInput.style.display = 'block';
+            tableInput.parentElement.style.display = 'block';
+            tableInput.required = true;
+        } else {
+            tableInput.style.display = 'none';
+            tableInput.parentElement.style.display = 'none';
+            tableInput.required = false;
+        }
+    }
+
+    function continueToPay() {
+        document.querySelector('.checkout-payment-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function goBack() {
+        window.history.back();
+    }
+
+    function updateQty(productId, change) {
+        $.ajax({
+            url: '/api/update-cart',
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            data: {
+                product_id: productId,
+                quantity: change
+            },
+            success: function(response) {
+                location.reload();
+            }
+        });
+    }
+
+    function submitPayment(e) {
+        e.preventDefault();
+
+        const formData = new FormData(document.getElementById('paymentForm'));
+        formData.append('payment_method', selectedPaymentMethod);
+        formData.append('order_type', selectedOrderType);
+
+        $.ajax({
+            url: '/api/process-payment',
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            data: Object.fromEntries(formData),
+            success: function(response) {
+                if (response.success) {
+                    window.location.href = '/receipt/' + response.order_id;
+                }
+            },
+            error: function(error) {
+                alert('Terjadi kesalahan, silakan coba lagi');
+            }
+        });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        handleOrderType('Dine In');
+    });
+</script>
+@endsection
