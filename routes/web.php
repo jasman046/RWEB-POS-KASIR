@@ -3,6 +3,18 @@
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TransactionController;
+
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/', function () {
+    return redirect()->route('transactions.index');
+});
+
+Route::resource('transactions', TransactionController::class);
  
 Route::get('/', [OrderController::class, 'index'])->name('index');
  
