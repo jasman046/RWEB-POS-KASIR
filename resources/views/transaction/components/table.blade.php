@@ -1,38 +1,67 @@
-<div class="bg-white rounded-[28px] shadow-sm p-6">
+<div class="transaction-table-wrapper">
 
-    <div class="flex items-center justify-between mb-6">
+    <div class="transaction-table-header">
 
-        <h2 class="text-2xl font-bold text-[#343C6A]">
-            Recent Transaction
-        </h2>
+        <h2>Recent Transactions</h2>
 
-        <button class="text-sm text-blue-600 hover:underline">
-            View All
-        </button>
+        <div class="transaction-tabs">
+
+            <div class="transaction-tabs">
+
+            <a href="{{ route('transactions.index') }}"
+            class="tab {{ empty($category) ? 'active' : '' }}">
+                All Transactions
+            </a>
+
+            <a href="{{ route('transactions.index', ['category' => 'Income']) }}"
+            class="tab {{ $category == 'Income' ? 'active' : '' }}">
+                Income
+            </a>
+
+            <a href="{{ route('transactions.index', ['category' => 'Expense']) }}"
+            class="tab {{ $category == 'Expense' ? 'active' : '' }}">
+                Expense
+            </a>
+
+        </div>
+
+        </div>
 
     </div>
 
-    <div class="overflow-x-auto">
+    <div class="transaction-table-card">
 
-        <table class="w-full">
+        <table class="transaction-table">
+
+        <colgroup>
+
+            <col style="width:25%">
+
+            <col style="width:15%">
+
+            <col style="width:13%">
+
+            <col style="width:10%">
+
+            <col style="width:14%">
+
+            <col style="width:11%">
+
+            <col style="width:12%">
+
+        </colgroup>
 
             <thead>
 
-                <tr class="text-left text-gray-400 border-b">
+                <tr>
 
-                    <th class="pb-4 font-medium">Description</th>
-
-                    <th class="pb-4 font-medium">Transaction ID</th>
-
-                    <th class="pb-4 font-medium">Type</th>
-
-                    <th class="pb-4 font-medium">Card</th>
-
-                    <th class="pb-4 font-medium">Date</th>
-
-                    <th class="pb-4 font-medium text-right">Amount</th>
-
-                    <th class="pb-4 font-medium text-center">Receipt</th>
+                    <th>Description</th>
+                    <th>Transaction ID</th>
+                    <th>Type</th>
+                    <th>Card</th>
+                    <th>Date</th>
+                    <th class="text-right">Amount</th>
+                    <th class="text-center">Receipt</th>
 
                 </tr>
 
@@ -40,61 +69,97 @@
 
             <tbody>
 
-                @foreach($transactions as $transaction)
+                @forelse($transactions as $transaction)
 
-                <tr class="border-b last:border-none hover:bg-gray-50 transition">
+                <tr>
 
-                    <td class="py-5 font-semibold text-[#343C6A]">
-                        {{ $transaction->description }}
+                    <td>
+
+                        <div class="description-cell">
+
+                            <div class="transaction-icon">
+
+                                <i class="fas fa-receipt"></i>
+
+                            </div>
+
+                            <span>
+
+                                {{ $transaction->description }}
+
+                            </span>
+
+                        </div>
+
                     </td>
 
-                    <td class="text-gray-500">
+                    <td>
+
                         {{ $transaction->transaction_code }}
+
                     </td>
 
                     <td>
-                        {{ $transaction->type }}
+
+                        <span class="badge-type">
+
+                            {{ $transaction->type }}
+
+                        </span>
+
                     </td>
 
                     <td>
-                        {{ $transaction->card->card_number }}
+
+                        **** {{ substr($transaction->card->card_number,-4) }}
+
                     </td>
 
                     <td>
-                        {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d M, h:i A') }}
-                    </td>
 
-                    <td class="text-right">
-
-                        @if($transaction->category == 'Income')
-
-                            <span class="font-semibold text-green-500">
-                                + Rp {{ number_format($transaction->amount,0,',','.') }}
-                            </span>
-
-                        @else
-
-                            <span class="font-semibold text-red-500">
-                                - Rp {{ number_format($transaction->amount,0,',','.') }}
-                            </span>
-
-                        @endif
+                        {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d M Y') }}
 
                     </td>
 
-                    <td class="text-center">
+                    <td class="amount-column">
 
-                        <button class="px-4 py-2 rounded-full border hover:bg-gray-100 transition">
+                        <span class="{{ $transaction->category == 'Income' ? 'amount-income' : 'amount-expense' }}">
+
+                            {{ $transaction->category == 'Income' ? '+' : '-' }}
+
+                            Rp {{ number_format($transaction->amount,0,',','.') }}
+
+                        </span>
+
+                    </td>
+
+                    <td class="receipt-column">
+
+                        <a
+                            href="{{ route('transactions.download',$transaction) }}"
+                            class="receipt-btn">
 
                             Download
 
-                        </button>
+                        </a>
 
                     </td>
 
                 </tr>
 
-                @endforeach
+                @empty
+
+                <tr>
+
+                    <td colspan="7" class="empty-table">
+
+                        Belum ada transaksi.
+
+                    </td>
+
+                </tr>
+
+                @endforelse
 
             </tbody>
 

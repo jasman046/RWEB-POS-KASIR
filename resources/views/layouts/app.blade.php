@@ -20,7 +20,7 @@
                 </div>
                 <span class="logo-text">ASgor</span>
             </a>
-            <h1 class="page-title">PRODUCT</h1>
+           <h1 class="page-title">@yield('page-title', 'PRODUCT')</h1>
         </div>
 
         <div class="header-center">
@@ -45,11 +45,13 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <a href="/" class="sidebar-item active">
+        <a href="{{ route('dashboard') }}"
+            class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <i class="fas fa-home"></i>
             <span>Dashboard</span>
         </a>
-        <a href="#" class="sidebar-item">
+       <a href="{{ route('transactions.index') }}"
+            class="sidebar-item {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
             <i class="fas fa-exchange-alt"></i>
             <span>Transactions</span>
         </a>
@@ -65,6 +67,7 @@
     </main>
 
     <!-- CART SECTION (Fixed) -->
+     @if(request()->routeIs('dashboard'))
     <div class="cart-container" id="cartContainer">
         <div class="cart-header">
             <h3 style="margin: 0;">Orders #002</h3>
@@ -78,7 +81,6 @@
             <span style="flex: 1; text-align: center;">Qty</span>
             <span style="flex: 1; text-align: right;">Price</span>
         </div>
-
         <div class="cart-items" id="cartItems">
             <p style="text-align: center; color: #B1B1B1; padding: 20px;">Keranjang kosong</p>
         </div>
@@ -91,7 +93,7 @@
             <button class="checkout-btn" onclick="goToCheckout()">Continue to Payment</button>
         </div>
     </div>
-
+@endif
     <!-- SCRIPTS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

@@ -1,54 +1,53 @@
-<div class="bg-white rounded-[24px] shadow-sm h-[225px] p-6">
+@php
 
-    <div class="flex items-end justify-between h-full">
+$colors = [
+    'blue',
+    'yellow',
+    'red',
+    'blue',
+    'yellow',
+    'blue'
+];
 
-        <div class="flex flex-col items-center gap-3">
+$maxExpense = collect($chartData)->max('total');
 
-            <div class="w-8 h-24 rounded-full bg-[#FFF176]"></div>
+@endphp
 
-            <span class="text-xs text-gray-500">Aug</span>
+<div class="expense-card">
 
-        </div>
+    <div class="expense-chart">
 
-        <div class="flex flex-col items-center gap-3">
+        @foreach($chartData as $item)
 
-            <div class="w-8 h-40 rounded-full bg-[#1565FF]"></div>
+            @php
 
-            <span class="text-xs text-gray-500">Sep</span>
+                if($maxExpense > 0){
 
-        </div>
+                    $height = max(
+                        ($item['total'] / $maxExpense) * 130,
+                        18
+                    );
 
-        <div class="flex flex-col items-center gap-3">
+                }else{
 
-            <div class="w-8 h-24 rounded-full bg-[#FFF176]"></div>
+                    $height = 12;
 
-            <span class="text-xs text-gray-500">Oct</span>
+                }
 
-        </div>
+            @endphp
 
-        <div class="flex flex-col items-center gap-3">
+            <div class="expense-bar-item">
 
-            <div class="w-8 h-14 rounded-full bg-[#FF5A5F]"></div>
+                <div
+                    class="expense-bar {{ $colors[$loop->index] }}"
+                    style="height: {{ $height }}px;">
+                </div>
 
-            <span class="text-xs text-gray-500">Nov</span>
+                <span>{{ $item['label'] }}</span>
 
-        </div>
+            </div>
 
-        <div class="flex flex-col items-center gap-3">
-
-            <div class="w-8 h-36 rounded-full bg-[#1565FF]"></div>
-
-            <span class="text-xs text-gray-500">Dec</span>
-
-        </div>
-
-        <div class="flex flex-col items-center gap-3">
-
-            <div class="w-8 h-24 rounded-full bg-[#FFF176]"></div>
-
-            <span class="text-xs text-gray-500">Jan</span>
-
-        </div>
+        @endforeach
 
     </div>
 

@@ -5,18 +5,10 @@ use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
 
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/', function () {
-    return redirect()->route('transactions.index');
-});
-
 Route::resource('transactions', TransactionController::class);
+Route::get('/transactions/{transaction}/download',[TransactionController::class, 'downloadReceipt'])->name('transactions.download');
  
-Route::get('/', [OrderController::class, 'index'])->name('index');
+Route::get('/', [OrderController::class, 'index'])->name('dashboard');
  
 // Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');

@@ -1,58 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transactions</title>
+@section('title', 'Transactions')
 
-    @vite(['resources/css/app.css','resources/js/app.js'])
-</head>
+@section('page-title', 'PRODUCT')
 
-<body class="bg-[#F5F7FB]">
+@section('content')
 
-<div class="max-w-7xl mx-auto py-8 px-6">
+<div class="transaction-dashboard">
 
-    {{-- Header Section --}}
-    <div class="grid grid-cols-3 gap-6 mb-4">
+    <div class="transaction-header">
 
-        <div class="col-span-2 flex items-center justify-between">
+        <div class="transaction-header-left">
 
-            <h2 class="text-[24px] font-semibold text-[#343C6A]">
-                Kartu Debit
-            </h2>
+            <h2>Debit Card</h2>
 
-            <button
-                class="text-[17px] font-semibold text-[#343C6A] hover:text-blue-600 transition">
-
-                + Tambah Kartu
-
+            <button class="add-card-btn">
+                + Add Card
             </button>
 
         </div>
 
-        <div>
+        <div class="transaction-header-right">
 
-            <h2 class="text-[24px] font-semibold text-[#343C6A]">
-
-                My Expense
-
-            </h2>
+            <h2>My Expense</h2>
 
         </div>
 
     </div>
 
-    {{-- Card & Chart --}}
-    <div class="grid grid-cols-3 gap-6">
+    <div class="transaction-top">
 
-        <div class="col-span-2">
+        <div class="transaction-card-section">
 
             @include('transaction.components.cards')
 
         </div>
 
-        <div>
+        <div class="transaction-chart-section">
 
             @include('transaction.components.chart')
 
@@ -60,7 +44,7 @@
 
     </div>
 
-    <div class="mt-8">
+    <div class="transaction-bottom">
 
         @include('transaction.components.table')
 
@@ -68,6 +52,4 @@
 
 </div>
 
-</body>
-
-</html>
+@endsection

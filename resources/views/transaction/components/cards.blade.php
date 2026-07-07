@@ -1,102 +1,66 @@
-<div class="grid grid-cols-2 gap-5">
+<div class="debit-cards">
 
     @foreach($cards as $card)
 
-    <div
-        class="h-[225px] rounded-[24px] overflow-hidden shadow-sm
+    <div class="debit-card {{ $card->theme == 'gradient' ? 'card-gradient' : 'card-light' }}">
 
-        {{ $card->theme == 'gradient'
-            ? 'bg-gradient-to-br from-[#2B164B] via-[#6C315C] to-[#F56594] text-white'
-            : 'bg-white border border-gray-200 text-[#343C6A]'
-        }}">
+        <div class="card-top">
 
-        <div class="px-6 pt-6">
+            <div>
 
-            <div class="flex justify-between">
+                <p class="card-label">Balance</p>
 
-                <div>
-
-                    <p class="text-[11px] opacity-70">
-
-                        Balance
-
-                    </p>
-
-                    <h3 class="text-[18px] font-bold mt-1">
-
-                        Rp {{ number_format($card->balance,0,',','.') }}
-
-                    </h3>
-
-                </div>
-
-                <div class="w-10 h-8 rounded-md bg-white/80 relative">
-
-                    <div class="absolute left-3 top-0 bottom-0 w-px bg-gray-300"></div>
-
-                    <div class="absolute left-6 top-0 bottom-0 w-px bg-gray-300"></div>
-
-                </div>
+                <h3 class="card-balance">
+                    Rp {{ number_format($card->balance,0,',','.') }}
+                </h3>
 
             </div>
 
-            <div class="grid grid-cols-2 mt-8">
+            <div class="card-chip"></div>
 
-                <div>
+        </div>
 
-                    <p class="text-[10px] uppercase opacity-70">
+        <div class="card-middle">
 
-                        CARD HOLDER
+            <div>
 
-                    </p>
+                <span class="card-small-title">
+                    CARD HOLDER
+                </span>
 
-                    <p class="font-medium mt-1">
+                <p class="card-value">
+                    {{ $card->card_holder }}
+                </p>
 
-                        {{ $card->card_holder }}
+            </div>
 
-                    </p>
+            <div>
 
-                </div>
+                <span class="card-small-title">
+                    VALID THRU
+                </span>
 
-                <div>
-
-                    <p class="text-[10px] uppercase opacity-70">
-
-                        VALID THRU
-
-                    </p>
-
-                    <p class="font-medium mt-1">
-
-                        {{ $card->expired_date }}
-
-                    </p>
-
-                </div>
+                <p class="card-value">
+                    {{ $card->expired_date }}
+                </p>
 
             </div>
 
         </div>
 
-        <div
-            class="mt-7 px-6 py-5 flex items-center justify-between
+        <div class="card-footer">
 
-            {{ $card->theme == 'gradient'
-                ? 'bg-white/10'
-                : 'border-t border-gray-200'
-            }}">
-
-            <h3 class="text-xl tracking-[3px]">
+            <span class="card-number">
 
                 {{ $card->card_number }}
 
-            </h3>
+            </span>
 
-            <div class="flex">
+            <div class="master-card">
 
-                <div class="w-8 h-8 rounded-full bg-white/60"></div>
+                <div class="circle-one"></div>
 
-                <div class="w-8 h-8 rounded-full bg-white/35 -ml-3"></div>
+                <div class="circle-two"></div>
 
             </div>
 
