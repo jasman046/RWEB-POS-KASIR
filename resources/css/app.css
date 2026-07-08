@@ -138,6 +138,7 @@ html, body {
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .icon-button:hover {
@@ -208,7 +209,7 @@ html, body {
     top: 0;
     width: 250px;
     height: 100vh;
-    background-color: #FAFBFF;
+    background-color: #ffffff;
     border-right: 1px solid var(--light-border);
     padding-top: 150px;
     padding-left: 40px;
@@ -890,8 +891,8 @@ html, body {
 }
 
 /* ============================================
-   TRANSACTION PAGE */
-
+   TRANSACTION PAGE
+*/
 .transaction-dashboard{
     width:100%;
 }
@@ -953,8 +954,8 @@ html, body {
 }
 
 /* ============================================
-   DEBIT CARD */
-
+   DEBIT CARD
+*/
 .debit-cards{
     display:grid;
     grid-template-columns:repeat(2,1fr);
@@ -1072,8 +1073,8 @@ html, body {
 }
 
 /* ============================================
-   MY EXPENSE */
-
+   MY EXPENSE
+*/
 .expense-card{
 
     background:#fff;
@@ -1156,7 +1157,7 @@ html, body {
 
 }
 
-/* ============================================ 
+/* ============================================
    TRANSACTION TABLE */
 
 .transaction-table-wrapper{
@@ -1462,4 +1463,289 @@ html, body {
 @keyframes slideUp {
     from { transform: translateY(100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+/* ============================================
+   SETTING PAGE
+   ============================================ */
+.setting-container {
+    background: #FFFFFF;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 20px 30px; /* Menyesuaikan margin dengan layout lo */
+}
+
+/* Tabs */
+.setting-tabs {
+    display: flex;
+    gap: 40px;
+    border-bottom: 1px solid var(--light-border);
+    margin-bottom: 30px;
+}
+
+.setting-tab-btn {
+    background: none;
+    border: none;
+    padding: 0 10px 15px 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-gray);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.setting-tab-btn.active{
+    color: var(--primary);
+}
+
+.setting-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 3px 3px 0 0;
+}
+
+/* Profile Header */
+.profile-header {
+    margin-bottom: 30px;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.avatar-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Form Styles */
+.setting-form .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 30px;
+    margin-bottom: 30px;
+}
+
+.setting-form .form-group label {
+    display: block;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.setting-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--light-border);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--text-light); /* Warna teks aga abu-abu biru sesuai desain */
+    outline: none;
+}
+
+.setting-input:focus {
+    border-color: var(--primary);
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Menyesuaikan gambar: Cancel (Switc) di kiri, Save di kanan */
+#profile .form-actions {
+    justify-content: space-between;
+}
+
+.btn-cancel {
+    padding: 12px 40px;
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-save {
+    padding: 12px 40px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Custom Toggle Switch (Untuk Preferences & Security) */
+.section-subtitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin: 20px 0 15px 0;
+}
+
+.toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.toggle-label {
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #E6EFF5;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input:checked + .slider {
+    background-color: #16DBCC; /* Warna hijau kebiruan kayak di gambar */
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+.slider.round {
+    border-radius: 24px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* ============================================
+   NOTIFICATION PAGE
+   ============================================ */
+.notification-container {
+    background-color: #FAFBFF; /* Warna background sedikit abu/putih sesuai gambar */
+    min-height: calc(100vh - 100px);
+    padding: 0;
+}
+
+.notif-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.notif-table th {
+    text-align: left;
+    color: #B1B1B1;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 20px 30px;
+    border-bottom: 1px solid #393C49; /* Garis bawah judul warna gelap */
+    border-right: 1px solid #393C49; /* Garis pemisah kolom */
+}
+
+.notif-table td {
+    padding: 20px 30px;
+    color: #B1B1B1;
+    font-size: 16px;
+    vertical-align: top;
+    border-right: 1px solid #393C49; /* Garis pemisah antar kolom ke bawah */
+}
+
+/* Hilangkan garis kanan di kolom terakhir biar rapi */
+.notif-table th:last-child, 
+.notif-table td:last-child {
+    border-right: none;
+}
+
+/* Status Buttons */
+.status-action {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-pending {
+    background-color: #E2E2E2;
+    color: #FF0000;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-check {
+    width: 35px;
+    height: 35px;
+    background-color: #0075FF;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
 }

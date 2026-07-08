@@ -31,12 +31,12 @@
         </div>
 
         <div class="header-right">
-            <button class="icon-button">
+            <a href="{{ route('setting') }}" class="icon-button">
                 <i class="fas fa-cog" style="color: #718EBF; font-size: 20px;"></i>
-            </button>
-            <button class="icon-button">
+            </a>
+            <a href="{{ route('notification') }}" class="icon-button">
                 <i class="fas fa-bell" style="color: #FE5C73; font-size: 20px;"></i>
-            </button>
+            </a>
             <div class="user-avatar">
                 <img src="https://via.placeholder.com/60" alt="User">
             </div>
@@ -55,7 +55,7 @@
             <i class="fas fa-exchange-alt"></i>
             <span>Transactions</span>
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{ route('setting') }}" class="sidebar-item {{ request()->routeIs('setting') ? 'active' : '' }}">
             <i class="fas fa-cog"></i>
             <span>Setting</span>
         </a>

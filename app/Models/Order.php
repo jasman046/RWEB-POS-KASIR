@@ -18,4 +18,9 @@ class Order extends Model
         $number = '#' . str_pad((Order::max('id') + 1), 3, '0', STR_PAD_LEFT);
         return $number;
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
