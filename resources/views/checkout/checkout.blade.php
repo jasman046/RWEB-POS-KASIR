@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 20px; align-items: center;">
-                        <div style="width: 60px; text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; width: 90px; gap: 5px;">
                             <button onclick="updateQty({{ $item['product_id'] }}, -1)" style="width: 20px; height: 20px; border: none; background: white; color: #1814F3; cursor: pointer; font-weight: bold;">-</button>
                             <span style="display: inline-block; margin: 0 5px; width: 20px;">{{ $item['quantity'] }}</span>
                             <button onclick="updateQty({{ $item['product_id'] }}, 1)" style="width: 20px; height: 20px; border: none; background: white; color: #1814F3; cursor: pointer; font-weight: bold;">+</button>
@@ -59,7 +59,6 @@
             </div>
         </div>
 
-        <button class="checkout-btn" onclick="continueToPay()">Continue to Payment</button>
     </div>
 
     <div class="checkout-payment-section">
@@ -111,6 +110,34 @@
                 </div>
             </div>
 
+            <div id="qrisSection" style="display: none; text-align: center; padding: 20px 0;">
+                <div style="background-color: #F5F7FA; padding: 20px; border-radius: 12px; display: inline-block; border: 1px solid var(--light-border);">
+                    
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Pembayaran+ASgor" alt="QR Code QRIS" style="width: 150px; height: 150px; border-radius: 8px; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+                    <p style="font-size: 14px; color: var(--text-dark); font-weight: 600; margin-bottom: 5px;">ASgor - Nasi Goreng</p>
+                    <p style="font-size: 12px; color: var(--text-gray);">Scan menggunakan m-Banking / e-Wallet</p>
+                </div>
+            </div>
+
+            <div id="cashSection" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">Nominal Uang Diterima</label>
+                    <input type="number" class="form-input" id="cashAmount" name="cash_amount" placeholder="Contoh: 50000" oninput="calculateChange()">
+                    
+                    <div style="margin-top: 15px; padding: 15px; background-color: #F5F7FA; border-radius: 8px; border: 1px solid var(--light-border);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--text-gray); font-size: 14px;">Total Tagihan:</span>
+                            <span style="font-weight: 600; color: var(--text-dark);">Rp {{ number_format($total, 0, ',', '.') }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: var(--text-gray); font-size: 14px;">Kembalian:</span>
+                            <span id="changeAmount" style="font-weight: bold; color: var(--text-dark); font-size: 18px;">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div style="border-top: 1px solid #393C49; padding-top: 20px; margin-top: 20px;">
                 <div class="form-row">
                     <div class="form-group">
@@ -122,7 +149,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Table no.</label>
-                        <input type="number" class="form-input" id="tableNumber" name="table_number" placeholder="04" style="background-color: #0075FF; color: white;">
+                        <input type="number" class="form-input" id="tableNumber" name="table_number" placeholder="0" style="background-color: #0075FF; color: white;">
                     </div>
                 </div>
             </div>
@@ -144,14 +171,49 @@
 
     function selectPayment(method, element) {
         selectedPaymentMethod = method;
+        
+        // Hapus warna biru dari semua tombol metode pembayaran
         document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('active'));
+        // Kasih warna biru ke tombol yang lagi diklik
         element.classList.add('active');
 
+        // Ambil ID masing-masing form
         const creditCardSection = document.getElementById('creditCardSection');
+        const qrisSection = document.getElementById('qrisSection');
+        const cashSection = document.getElementById('cashSection');
+
+        // Sembunyikan semuanya dulu
+        creditCardSection.style.display = 'none';
+        qrisSection.style.display = 'none';
+        cashSection.style.display = 'none';
+
+        // Tampilkan yang sesuai dengan pilihan
         if (method === 'Credit Card') {
             creditCardSection.style.display = 'block';
+        } else if (method === 'QRIS') {
+            qrisSection.style.display = 'block';
+        } else if (method === 'Cash') {
+            cashSection.style.display = 'block';
+        }
+    }
+
+    // Pastikan ini ada di dalam tag <script> di paling bawah
+    const orderTotal = {{ $total }};
+
+    function calculateChange() {
+        // Ambil nilai input dan paksa ubah jadi angka bulat (integer)
+        const cashInput = parseInt(document.getElementById('cashAmount').value) || 0;
+        const changeElement = document.getElementById('changeAmount');
+        
+        // Kalau uangnya kurang dari total tagihan
+        if (cashInput < orderTotal) {
+            changeElement.innerText = 'Uang Kurang!';
+            changeElement.style.color = '#FF4B4A'; // Merah
         } else {
-            creditCardSection.style.display = 'none';
+            // Kalau uangnya pas atau lebih, hitung kembalian
+            const change = cashInput - orderTotal;
+            changeElement.innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(change);
+            changeElement.style.color = '#00C853'; // Hijau
         }
     }
 
