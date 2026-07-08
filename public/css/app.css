@@ -891,7 +891,6 @@ html, body {
 
 /* ============================================
    TRANSACTION PAGE
-============================================ */
 
 .transaction-dashboard{
     width:100%;
@@ -955,7 +954,6 @@ html, body {
 
 /* ============================================
    DEBIT CARD
-============================================ */
 
 .debit-cards{
     display:grid;
@@ -1075,7 +1073,6 @@ html, body {
 
 /* ============================================
    MY EXPENSE
-============================================ */
 
 .expense-card{
 
@@ -1161,7 +1158,6 @@ html, body {
 
 /* ============================================
    TRANSACTION TABLE
-============================================ */
 
 .transaction-table-wrapper{
 
@@ -1449,4 +1445,20 @@ html, body {
 
     text-align:center;
 
+/* ============================================
+   TOAST NOTIFICATION
+   ============================================ */
+.custom-toast {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    top: auto !important; /* Mematikan tarikan dari atas */
+    z-index: 9999 !important;
+    /* Tambahan efek transisi biar munculnya mulus */
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

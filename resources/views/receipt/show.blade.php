@@ -12,15 +12,22 @@
     /* Pelapis abu-abu yang menutupi full satu layar */
     .receipt-modal-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
+        top: 100px;
+        left: 250px;
+        width: calc(100vw - 250px);
+        height: calc(100vh - 100px);
         background-color: rgba(217, 217, 217, 0.85);
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 9999 !important; /* Paksa posisi paling atas, ngalahin header */
+        z-index: 10; /* Paksa posisi paling atas, ngalahin header */
+    }
+
+    @media (max-width: 768px) {
+        .receipt-modal-overlay {
+            left: 0;
+            width: 100vw;
+        }
     }
 
     /* Kotak putih struknya */
@@ -33,6 +40,7 @@
         box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
         max-height: 90vh;
         overflow-y: auto;
+        max-height: calc(100vh - 180px);
     }
 
     /* Typography khusus struk */
@@ -107,8 +115,9 @@
         
         @foreach($order->orderItems as $item)
         <div class="receipt-row">
-            <span>{{ $item->product->name }}</span>
-            <span>Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+            <span>{{ $item->quantity }}x {{ $item->product->name }}</span>
+            
+            <span>Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</span>
         </div>
         @endforeach
         
