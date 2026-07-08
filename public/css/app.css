@@ -888,6 +888,563 @@ html, body {
         padding: 20px;
     }
 }
+
+/* ============================================
+   TRANSACTION PAGE
+
+.transaction-dashboard{
+    width:100%;
+}
+
+.transaction-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.transaction-header-left{
+    width:66%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.transaction-header-right{
+    width:30%;
+}
+
+.transaction-header h2{
+    font-size:22px;
+    font-weight:600;
+    color:#343C6A;
+}
+
+.add-card-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:600;
+    color:#343C6A;
+}
+
+.add-card-btn:hover{
+    color:#1814F3;
+}
+
+.transaction-top{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+    margin-bottom:30px;
+}
+
+.transaction-card-section{
+    width:100%;
+}
+
+.transaction-chart-section{
+    width:100%;
+}
+
+.transaction-bottom{
+    width:100%;
+}
+
+/* ============================================
+   DEBIT CARD
+
+.debit-cards{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+}
+
+.debit-card{
+    border-radius:25px;
+    overflow:hidden;
+    min-height:220px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.card-gradient{
+    background:linear-gradient(135deg,#2D1B69,#7B3FF2,#FF6B9D);
+    color:#fff;
+}
+
+.card-light{
+    background:#fff;
+    color:#343C6A;
+    border:1px solid #E6EFF5;
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    padding:25px;
+}
+
+.card-label{
+    font-size:13px;
+    opacity:.8;
+}
+
+.card-balance{
+    margin-top:6px;
+    font-size:24px;
+    font-weight:700;
+}
+
+.card-chip{
+    width:42px;
+    height:32px;
+    background:#d9d9d9;
+    border-radius:8px;
+}
+
+.card-middle{
+    display:flex;
+    justify-content:space-between;
+    padding:0 25px;
+}
+
+.card-small-title{
+    font-size:10px;
+    letter-spacing:1px;
+    opacity:.7;
+}
+
+.card-value{
+    margin-top:6px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.card-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 25px;
+    background:rgba(255,255,255,.10);
+}
+
+.card-light .card-footer{
+    background:#fff;
+    border-top:1px solid #E6EFF5;
+}
+
+.card-number{
+    font-size:18px;
+    letter-spacing:2px;
+    font-weight:500;
+}
+
+.master-card{
+    display:flex;
+}
+
+.circle-one,
+.circle-two{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+}
+
+.circle-one{
+    background:rgba(255,255,255,.7);
+}
+
+.circle-two{
+    background:rgba(255,255,255,.35);
+    margin-left:-10px;
+}
+
+.card-light .circle-one{
+    background:#8BA3CB;
+}
+
+.card-light .circle-two{
+    background:#C8D4E8;
+}
+
+/* ============================================
+   MY EXPENSE
+
+.expense-card{
+
+    background:#fff;
+
+    border-radius:25px;
+
+    padding:25px;
+
+    height:220px;
+
+    overflow:hidden;
+
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+}
+
+.expense-chart{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    flex:1;
+
+    padding-top:20px;
+
+}
+
+.expense-bar-item{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-end;
+
+    align-items:center;
+
+    flex:1;
+
+    gap:12px;
+
+}
+
+.expense-bar{
+
+    width:22px;
+
+    border-radius:999px;
+
+    transition:.3s;
+
+}
+
+.expense-bar.blue{
+
+    background:#1814F3;
+
+}
+
+.expense-bar.yellow{
+
+    background:#FFC107;
+
+}
+
+.expense-bar.red{
+
+    background:#FF4B4A;
+
+}
+
+.expense-bar-item span{
+
+    font-size:12px;
+
+    color:#718EBF;
+
+}
+
+/* ============================================
+   TRANSACTION TABLE
+
+.transaction-table-wrapper{
+
+    margin-top:35px;
+
+}
+
+.transaction-table-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.transaction-table-header h2{
+
+    font-size:24px;
+
+    color:#343C6A;
+
+    font-weight:600;
+
+}
+
+.transaction-tabs{
+
+    display:flex;
+
+    gap:25px;
+
+}
+
+.tab{
+
+    text-decoration:none;
+
+    color:#8BA3CB;
+
+    font-size:15px;
+
+    font-weight:500;
+
+    padding-bottom:8px;
+
+    transition:.3s;
+
+}
+
+.tab:hover{
+
+    color:#1814F3;
+
+    border-bottom:2px solid #1814F3;
+
+}
+
+.tab.active{
+
+    color:#1814F3;
+
+    border-bottom:2px solid #1814F3;
+
+    font-weight:600;
+
+}
+
+.transaction-table-card{
+
+    background:#fff;
+
+    border-radius:25px;
+
+    padding:20px;
+
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+}
+
+.transaction-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.transaction-table th{
+
+    text-align:left;
+
+    color:#8BA3CB;
+
+    font-size:14px;
+
+    padding:18px 15px;
+
+    border-bottom:1px solid #E6EFF5;
+
+}
+
+.transaction-table td{
+
+    padding:18px 15px;
+
+    font-size:15px;
+
+    color:#343C6A;
+
+    border-bottom:1px solid #F2F4F8;
+
+}
+
+.transaction-table tr:last-child td{
+
+    border-bottom:none;
+
+}
+
+.transaction-table tbody tr:hover{
+
+    background:#F8FAFD;
+
+}
+
+.description-cell{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+.transaction-icon{
+
+    width:42px;
+
+    height:42px;
+
+    background:#EEF3FF;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#1814F3;
+
+}
+
+.badge-type{
+
+    min-width:85px;
+
+    text-align:center;
+
+}
+
+.amount-income{
+
+    color:#16A34A;
+
+    font-weight:600;
+
+}
+
+.amount-expense{
+
+    color:#EF4444;
+
+    font-weight:600;
+
+}
+
+.empty-table{
+
+    text-align:center;
+
+    color:#8BA3CB;
+
+    padding:40px;
+
+}
+
+.receipt-column{
+
+    width:160px;
+
+    text-align:center;
+
+}
+
+.receipt-cell{
+    text-align:center;
+}
+
+.receipt-btn{
+
+    display:inline-flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:110px;
+
+    height:40px;
+
+    border:1.5px solid #1814F3;
+
+    border-radius:999px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#1814F3;
+
+    text-decoration:none;
+
+    transition:.25s;
+
+}
+
+.receipt-btn:hover{
+
+    background:#1814F3;
+
+    color:#fff;
+
+}
+
+.transaction-table thead th{
+
+    padding:18px 18px;
+
+    font-size:15px;
+
+    font-weight:500;
+
+    color:#718EBF;
+
+    border-bottom:1px solid #EDF1F7;
+
+}
+
+.transaction-table tbody td{
+
+    padding:18px;
+
+    vertical-align:middle;
+
+}
+
+.transaction-table tbody tr{
+
+    transition:.25s;
+
+}
+
+.transaction-table tbody tr:hover{
+
+    background:#F8FAFF;
+
+}
+
+.amount-column{
+
+    text-align:right;
+
+    white-space:nowrap;
+
+}
+
+.receipt-column{
+
+    text-align:center;
+
 /* ============================================
    TOAST NOTIFICATION
    ============================================ */
