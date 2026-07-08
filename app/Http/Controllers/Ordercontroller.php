@@ -86,7 +86,7 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'order_type' => 'required|in:Dine In,Delivery',
-            'table_number' => 'required_if:order_type,Dine In',
+            'customer_name' => 'required|string',
             'payment_method' => 'required|in:Credit Card,QRIS,Cash',
             'cardholder_name' => 'required_if:payment_method,Credit Card',
             'card_number' => 'required_if:payment_method,Credit Card',
@@ -104,7 +104,7 @@ class OrderController extends Controller
         $order = Order::create([
             'order_number' => 'ORD-' . date('YmdHis') . rand(1000, 9999),
             'type' => $validated['order_type'],
-            'table_number' => $validated['order_type'] === 'Dine In' ? $validated['table_number'] : null,
+            'customer_name' => $validated['customer_name'],
             'payment_method' => $validated['payment_method'],
             'total_price' => $this->calculateTotal($cart),
             'status' => 'completed'

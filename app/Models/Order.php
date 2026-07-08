@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = ['order_number', 'type', 'table_number', 'total_price', 'status', 'payment_method'];
+    protected $fillable = ['order_number', 'type', 'customer_name', 'total_price', 'status', 'payment_method'];
 
     public function orderItems()
     {
@@ -17,5 +17,10 @@ class Order extends Model
     {
         $number = '#' . str_pad((Order::max('id') + 1), 3, '0', STR_PAD_LEFT);
         return $number;
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }

@@ -147,9 +147,9 @@
                             <option value="Delivery">Delivery</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Table no.</label>
-                        <input type="number" class="form-input" id="tableNumber" name="table_number" placeholder="0" style="background-color: #0075FF; color: white;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Nama </label>
+                        <input type="text" id="customer_name" name="customer_name" class="form-input" placeholder="Masukkan nama..." >
                     </div>
                 </div>
             </div>
