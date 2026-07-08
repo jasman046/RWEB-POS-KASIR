@@ -232,17 +232,14 @@
     }
 
     function handleOrderType(type) {
-        const tableInput = document.getElementById('tableNumber');
-        if (type === 'Dine In') {
-            tableInput.style.display = 'block';
-            tableInput.parentElement.style.display = 'block';
-            tableInput.required = true;
-        } else {
-            tableInput.style.display = 'none';
-            tableInput.parentElement.style.display = 'none';
-            tableInput.required = false;
-        }
-    }
+
+    const customerInput = document.getElementById('customerName');
+
+    customerInput.parentElement.style.display = 'block';
+
+    customerInput.required = true;
+
+}
 
     function continueToPay() {
         document.querySelector('.checkout-payment-section').scrollIntoView({ behavior: 'smooth' });
