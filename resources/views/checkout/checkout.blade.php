@@ -148,8 +148,16 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Table no.</label>
-                        <input type="number" class="form-input" id="tableNumber" name="table_number" placeholder="0" style="background-color: #0075FF; color: white;">
+                        <label class="form-label">Customer Name</label>
+
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="customerName"
+                            name="customer_name"
+                            placeholder="Enter customer name"
+                            style="background-color: #0075FF; color: white;"
+                            required>
                     </div>
                 </div>
             </div>
@@ -232,17 +240,14 @@
     }
 
     function handleOrderType(type) {
-        const tableInput = document.getElementById('tableNumber');
-        if (type === 'Dine In') {
-            tableInput.style.display = 'block';
-            tableInput.parentElement.style.display = 'block';
-            tableInput.required = true;
-        } else {
-            tableInput.style.display = 'none';
-            tableInput.parentElement.style.display = 'none';
-            tableInput.required = false;
-        }
-    }
+
+    const customerInput = document.getElementById('customerName');
+
+    customerInput.parentElement.style.display = 'block';
+
+    customerInput.required = true;
+
+}
 
     function continueToPay() {
         document.querySelector('.checkout-payment-section').scrollIntoView({ behavior: 'smooth' });

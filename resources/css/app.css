@@ -890,7 +890,7 @@ html, body {
 }
 
 /* ============================================
-   TRANSACTION PAGE
+   TRANSACTION PAGE */
 
 .transaction-dashboard{
     width:100%;
@@ -953,7 +953,7 @@ html, body {
 }
 
 /* ============================================
-   DEBIT CARD
+   DEBIT CARD */
 
 .debit-cards{
     display:grid;
@@ -1072,7 +1072,7 @@ html, body {
 }
 
 /* ============================================
-   MY EXPENSE
+   MY EXPENSE */
 
 .expense-card{
 
@@ -1156,8 +1156,8 @@ html, body {
 
 }
 
-/* ============================================
-   TRANSACTION TABLE
+/* ============================================ 
+   TRANSACTION TABLE */
 
 .transaction-table-wrapper{
 
@@ -1444,6 +1444,7 @@ html, body {
 .receipt-column{
 
     text-align:center;
+}
 
 /* ============================================
    TOAST NOTIFICATION

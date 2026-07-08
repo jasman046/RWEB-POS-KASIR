@@ -125,6 +125,26 @@
             <span>Total</span>
             <span>Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
         </div>
+
+        <div class="receipt-row">
+            <span>Payment</span>
+            <span>{{ $order->payment_method }}</span>
+        </div>
+
+        <div class="receipt-row">
+            <span>Order Type</span>
+            <span>{{ $order->type }}</span>
+        </div>
+
+        <div class="receipt-row">
+            <span>Customer</span>
+            <span>{{ $order->customer_name }}</span>
+        </div>
+
+        <div class="receipt-row">
+            <span>Date</span>
+            <span>{{ $order->created_at->format('d M Y H:i') }}</span>
+        </div>
         
         <div class="barcode-container">
             <svg width="200" height="50">

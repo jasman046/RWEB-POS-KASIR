@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('order_number')->unique();
             $table->enum('type', ['Dine In', 'Delivery'])->default('Dine In');
-            $table->integer('table_number')->nullable();
+            $table->string('customer_name')->nullable();
             $table->decimal('total_price', 10, 2)->default(0);
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
             $table->enum('payment_method', ['Credit Card', 'QRIS', 'Cash'])->nullable();
