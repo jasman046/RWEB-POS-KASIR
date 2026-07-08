@@ -175,6 +175,10 @@
                             <button class="qty-btn" onclick="updateQuantity(${item.product_id}, ${item.quantity - 1})">-</button>
                             <span style="width: 20px; text-align: center;">${item.quantity}</span>
                             <button class="qty-btn" onclick="updateQuantity(${item.product_id}, ${item.quantity + 1})">+</button>
+                            
+                            <button onclick="updateQuantity(${item.product_id}, 0)" style="border: none; background: transparent; color: #FF4B4A; cursor: pointer; padding: 5px; margin-left: 10px;" title="Hapus Produk">
+                                <i class="fas fa-trash-alt" style="font-size: 16px;"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -186,8 +190,8 @@
 
         // Go to checkout
         function goToCheckout() {
-            const cart = getCart();
-            if (Object.keys(cart).length === 0) {
+            const cartItems = document.querySelectorAll('#cartItems .cart-item');
+            if (cartItems.length === 0) {
                 alert('Keranjang kosong');
                 return;
             }
@@ -202,7 +206,8 @@
         // Show notification
         function showNotification(message) {
             const div = document.createElement('div');
-            div.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #1814F3; color: white; padding: 15px 20px; border-radius: 8px; z-index: 3000;';
+            notification.classList.add('custom-toast');
+            div.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1814F3; color: white; padding: 15px 30px; border-radius: 8px; z-index: 9999; box-shadow: 0px 4px 10px rgba(0,0,0,0.2); font-weight: 500; font-size: 15px;';
             div.textContent = message;
             document.body.appendChild(div);
             setTimeout(() => div.remove(), 3000);
@@ -230,6 +235,30 @@
                     card.style.display = 'none'; // Sembunyikan
                 }
             });
+        }
+
+        function removeFromCart(productId) {
+        // Tampilkan peringatan sebelum menghapus
+        if (confirm('Yakin ingin menghapus menu ini dari keranjang?')) {
+            $.ajax({
+                url: '/api/update-cart', // Kita pakai endpoint yang sama
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                data: {
+                    product_id: productId,
+                    quantity: 0 // Set quantity ke 0 agar dihapus oleh Controller
+                },
+                success: function(response) {
+                    // Reload halaman agar keranjang ter-update
+                    location.reload(); 
+                },
+                error: function() {
+                    alert('Gagal menghapus produk, silakan coba lagi.');
+                }
+            });
+        }
         }
     </script>
 
