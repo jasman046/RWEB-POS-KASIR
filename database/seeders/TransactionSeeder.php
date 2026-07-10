@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Card;
 use App\Models\Transaction;
+use Illuminate\Database\Seeder;
 
 class TransactionSeeder extends Seeder
 {
@@ -12,10 +13,18 @@ class TransactionSeeder extends Seeder
      */
     public function run(): void
     {
+        $cardGradient = Card::where('theme', 'gradient')->first();
+        $cardLight = Card::where('theme', 'light')->first();
+
+        if (! $cardGradient || ! $cardLight) {
+            $this->command->error('Card belum tersedia. Jalankan CardSeeder terlebih dahulu.');
+            return;
+        }
+
         Transaction::insert([
 
             [
-                'card_id' => 1,
+                'card_id' => $cardGradient->id,
                 'transaction_code' => '#12548796',
                 'description' => 'Restock',
                 'type' => 'Shopping',
@@ -29,7 +38,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 1,
+                'card_id' => $cardGradient->id,
                 'transaction_code' => '#12548797',
                 'description' => 'Selling',
                 'type' => 'Transfer',
@@ -43,7 +52,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 2,
+                'card_id' => $cardLight->id,
                 'transaction_code' => '#12548798',
                 'description' => 'Selling',
                 'type' => 'Service',
@@ -57,7 +66,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 2,
+                'card_id' => $cardLight->id,
                 'transaction_code' => '#12548799',
                 'description' => 'Salary Wilson',
                 'type' => 'Transfer',
@@ -71,7 +80,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 1,
+                'card_id' => $cardGradient->id,
                 'transaction_code' => '#12548800',
                 'description' => 'Salary Emily',
                 'type' => 'Transfer',
@@ -85,7 +94,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 1,
+                'card_id' => $cardGradient->id,
                 'transaction_code' => '#12548801',
                 'description' => 'Customer Payment',
                 'type' => 'Transfer',
@@ -99,7 +108,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 2,
+                'card_id' => $cardLight->id,
                 'transaction_code' => '#12548802',
                 'description' => 'Electricity Bill',
                 'type' => 'Service',
@@ -113,7 +122,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 1,
+                'card_id' => $cardGradient->id,
                 'transaction_code' => '#12548803',
                 'description' => 'Online Order',
                 'type' => 'Shopping',
@@ -127,7 +136,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 2,
+                'card_id' => $cardLight->id,
                 'transaction_code' => '#12548804',
                 'description' => 'Supplier Payment',
                 'type' => 'Transfer',
@@ -141,7 +150,7 @@ class TransactionSeeder extends Seeder
             ],
 
             [
-                'card_id' => 1,
+                'card_id' => $cardGradient->id,
                 'transaction_code' => '#12548805',
                 'description' => 'Cash Deposit',
                 'type' => 'Transfer',

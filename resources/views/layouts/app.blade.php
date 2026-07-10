@@ -14,7 +14,7 @@
     <!-- HEADER -->
     <header class="header">
         <div class="header-left">
-            <a href="/" class="logo">
+            <a href="{{ route('dashboard') }}" class="logo">
                 <div class="logo-icon">
                     <i class="fas fa-wallet" style="color: #1814F3; font-size: 18px;"></i>
                 </div>
@@ -206,13 +206,39 @@
         }
 
         // Show notification
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
+
             const div = document.createElement('div');
-            notification.classList.add('custom-toast');
-            div.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1814F3; color: white; padding: 15px 30px; border-radius: 8px; z-index: 9999; box-shadow: 0px 4px 10px rgba(0,0,0,0.2); font-weight: 500; font-size: 15px;';
-            div.textContent = message;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 3000);
+
+            let bgColor = '#1814F3';
+
+            if(type === 'error'){
+                bgColor = '#EF4444';
+            }
+
+            div.classList.add('custom-toast');
+
+            div.style.cssText = `
+                position: fixed;
+                background: ${bgColor};
+                color: white;
+                padding: 14px 22px;
+                border-radius: 10px;
+                z-index: 99999;
+                box-shadow: 0 8px 20px rgba(0,0,0,.2);
+                font-weight: 500;
+                min-width: 320px;
+                max-width: 420px;
+                animation: slideIn .3s ease;
+            `;
+
+            div.innerHTML = message;
+
+            document.querySelector('body').appendChild(div);
+
+            setTimeout(() => {
+                div.remove();
+            }, 3000);
         }
 
         // Initialize cart on page load
@@ -263,6 +289,31 @@
         }
         }
     </script>
+
+@if (session('error'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        showNotification(@json(session('error')), 'error');
+    });
+    if (!document.getElementById('toast-animation')) {
+    const style = document.createElement('style');
+    style.id = 'toast-animation';
+    style.innerHTML = `
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+</script>
+@endif
 
     @yield('extra_js')
 </body>
