@@ -1597,6 +1597,133 @@ html, body {
     justify-content: space-between;
 }
 
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* ============================================
+   SETTING PAGE
+   ============================================ */
+.setting-container {
+    background: #FFFFFF;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 20px 30px; /* Menyesuaikan margin dengan layout lo */
+}
+
+/* Tabs */
+.setting-tabs {
+    display: flex;
+    gap: 40px;
+    border-bottom: 1px solid var(--light-border);
+    margin-bottom: 30px;
+}
+
+.setting-tab-btn {
+    background: none;
+    border: none;
+    padding: 0 10px 15px 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-gray);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.setting-tab-btn.active{
+    color: var(--primary);
+}
+
+.setting-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 3px 3px 0 0;
+}
+
+/* Profile Header */
+.profile-header {
+    margin-bottom: 30px;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.avatar-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Form Styles */
+.setting-form .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 30px;
+    margin-bottom: 30px;
+}
+
+.setting-form .form-group label {
+    display: block;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.setting-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--light-border);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--text-light); /* Warna teks aga abu-abu biru sesuai desain */
+    outline: none;
+}
+
+.setting-input:focus {
+    border-color: var(--primary);
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Menyesuaikan gambar: Cancel (Switc) di kiri, Save di kanan */
+#profile .form-actions {
+    justify-content: space-between;
+}
+
 .btn-cancel {
     padding: 12px 40px;
     background: transparent;

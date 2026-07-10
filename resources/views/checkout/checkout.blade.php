@@ -147,17 +147,9 @@
                             <option value="Delivery">Delivery</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Customer Name</label>
-
-                        <input
-                            type="text"
-                            class="form-input"
-                            id="customerName"
-                            name="customer_name"
-                            placeholder="Enter customer name"
-                            style="background-color: #0075FF; color: white;"
-                            required>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Nama </label>
+                        <input type="text" id="customer_name" name="customer_name" class="form-input" placeholder="Masukkan nama..." >
                     </div>
                 </div>
             </div>
