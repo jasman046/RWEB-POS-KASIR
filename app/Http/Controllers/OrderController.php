@@ -107,7 +107,7 @@ class OrderController extends Controller
         }
 
         // Card utama milik toko
-        $card = Card::find(1);
+        $card = Card::where('theme', 'gradient')->first();
 
         if (!$card) {
             return response()->json([
