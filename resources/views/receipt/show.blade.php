@@ -164,16 +164,29 @@
                 <rect x="156" y="0" width="4" height="50" fill="black"></rect>
                 <rect x="164" y="0" width="8" height="50" fill="black"></rect>
             </svg>
-            <div style="margin-top: 10px; font-size: 13px; font-weight: 500; color: var(--text-dark);">
+            <div class="receipt-order-number-text">
                 {{ $order->order_number }}
             </div>
         </div>
-        
-        <div style="text-align: center; margin-top: 30px;">
-            <button onclick="window.location.href='/'" style="padding: 14px 40px; background-color: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.3s;">
-                Back to Dashboard
+
+        <div class="receipt-action-buttons">
+            <button class="btn-print" onclick="printReceipt()">
+                <i class="fas fa-print"></i>
+                Cetak Struk
             </button>
+            <a href="{{ route('dashboard') }}" class="btn-back-dashboard">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
         </div>
     </div>
 </div>
+@endsection
+
+@section('extra_js')
+<script>
+    function printReceipt() {
+        window.print();
+    }
+</script>
 @endsection

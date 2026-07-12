@@ -14,9 +14,9 @@
 
             <h2>Debit Card</h2>
 
-            <button class="add-card-btn">
+            <!-- <button class="add-card-btn">
                 + Add Card
-            </button>
+            </button> -->
 
         </div>
 

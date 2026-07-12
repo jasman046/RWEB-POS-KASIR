@@ -4,17 +4,74 @@
 
 @section('extra_css')
 <style>
-    /* Menyembunyikan keranjang bawaan dari layout utama khusus di halaman ini */
+    /* Sembunyikan keranjang bawaan dari layout utama di halaman checkout */
     .cart-container {
         display: none !important;
     }
-    
-    /* Mereset margin agar form checkout tampil penuh dan rapi ke tengah */
+    /* Cart FAB juga disembunyikan di halaman checkout */
+    .cart-fab {
+        display: none !important;
+    }
+
+    /* Checkout container: responsive di semua ukuran layar */
     .checkout-container {
         margin-right: 0 !important;
-        max-width: 1100px; 
+        width: 100%;
+        max-width: 1100px;
         margin: 0 auto;
-        gap: 40px; /* Sedikit memperlebar jarak antara list order dan form payment */
+        gap: 30px;
+    }
+
+    /* Tombol Lanjut ke Pembayaran (mobile only) */
+    .btn-scroll-to-pay {
+        display: none;
+        width: 100%;
+        padding: 14px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 16px;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        /* Checkout jadi 1 kolom di mobile */
+        .checkout-container {
+            grid-template-columns: 1fr !important;
+            gap: 20px;
+            padding: 0;
+        }
+
+        /* Tombol scroll to payment tampil di mobile */
+        .btn-scroll-to-pay {
+            display: block;
+        }
+
+        /* Action buttons full width di mobile */
+        .action-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-cancel,
+        .btn-confirm {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Payment methods jadi 3 kolom pas di mobile */
+        .payment-methods {
+            gap: 8px;
+        }
+
+        .payment-method {
+            padding: 10px 8px;
+            font-size: 12px;
+        }
     }
 </style>
 @endsection
@@ -59,9 +116,14 @@
             </div>
         </div>
 
+        {{-- Tombol Lanjut ke Pembayaran (muncul di mobile untuk skip scroll) --}}
+        <button class="btn-scroll-to-pay" onclick="document.getElementById('paymentSection').scrollIntoView({behavior:'smooth'})">
+            <i class="fas fa-arrow-down"></i> Lanjut ke Pembayaran
+        </button>
+
     </div>
 
-    <div class="checkout-payment-section">
+    <div class="checkout-payment-section" id="paymentSection">
         <h2 class="form-section-title">Payment</h2>
         <p class="form-section-subtitle">Methods</p>
 
@@ -154,8 +216,6 @@
                 </div>
             </div>
 
-            <div style="border-top: 1px solid #393C49; border-bottom: 1px solid #393C49; padding: 20px 0; margin: 20px 0;">
-            </div>
 
             <div class="action-buttons">
                 <button type="button" class="btn-cancel" onclick="goBack()">Cancel</button>
@@ -232,14 +292,13 @@
     }
 
     function handleOrderType(type) {
-
-    const customerInput = document.getElementById('customerName');
-
-    customerInput.parentElement.style.display = 'block';
-
-    customerInput.required = true;
-
-}
+        // Fix: ID di HTML adalah 'customer_name' bukan 'customerName'
+        const customerInput = document.getElementById('customer_name');
+        if (customerInput) {
+            customerInput.parentElement.style.display = 'block';
+            customerInput.required = true;
+        }
+    }
 
     function continueToPay() {
         document.querySelector('.checkout-payment-section').scrollIntoView({ behavior: 'smooth' });
@@ -269,9 +328,60 @@
     function submitPayment(e) {
         e.preventDefault();
 
+        // ==========================================
+        // 1. VALIDASI FRONT-END (SEBELUM DIKIRIM)
+        // ==========================================
+        
+        // Ambil nilai Nama Customer
+        const customerName = document.getElementById('customer_name').value.trim();
+        
+        // Cek Nama (Wajib diisi untuk semua metode)
+        if (customerName === '') {
+            alert('Mohon isi kolom Nama pemesan terlebih dahulu!');
+            document.getElementById('customer_name').focus();
+            return; // Hentikan eksekusi
+        }
+
+        // Cek Khusus Metode Credit Card
+        if (selectedPaymentMethod === 'Credit Card') {
+            const cardName = document.getElementById('cardholderName').value.trim();
+            const cardNum = document.getElementById('cardNumber').value.trim();
+            
+            if (cardName === '' || cardNum === '') {
+                alert('Mohon lengkapi data Credit Card (Nama dan Nomor Kartu)!');
+                return;
+            }
+        }
+
+        // Cek Khusus Metode Cash
+        if (selectedPaymentMethod === 'Cash') {
+            const cashInput = parseInt(document.getElementById('cashAmount').value) || 0;
+            
+            if (cashInput === 0) {
+                alert('Mohon masukkan Nominal Uang yang diterima dari pelanggan!');
+                document.getElementById('cashAmount').focus();
+                return;
+            }
+            if (cashInput < orderTotal) {
+                alert('Pembayaran gagal: Uang yang dibayarkan kurang dari total tagihan (Rp ' + new Intl.NumberFormat('id-ID').format(orderTotal) + ')');
+                document.getElementById('cashAmount').focus();
+                return;
+            }
+        }
+
+        // ==========================================
+        // 2. PROSES PENGIRIMAN DATA KE BACKEND
+        // ==========================================
+        
         const formData = new FormData(document.getElementById('paymentForm'));
         formData.append('payment_method', selectedPaymentMethod);
         formData.append('order_type', selectedOrderType);
+
+        // Ubah teks tombol jadi "Processing..." biar keliatan lagi loading
+        const btnSubmit = document.querySelector('.btn-confirm');
+        const originalText = btnSubmit.innerHTML;
+        btnSubmit.innerHTML = 'Processing...';
+        btnSubmit.disabled = true;
 
         $.ajax({
             url: '/api/process-payment',
@@ -283,10 +393,26 @@
             success: function(response) {
                 if (response.success) {
                     window.location.href = '/receipt/' + response.order_id;
+                } else {
+                    // Berjaga-jaga jika backend me-return JSON success:false dengan pesan error
+                    alert('Gagal: ' + (response.message || 'Terjadi kesalahan pada sistem pembayaran.'));
+                    btnSubmit.innerHTML = originalText;
+                    btnSubmit.disabled = false;
                 }
             },
-            error: function(error) {
-                alert('Terjadi kesalahan, silakan coba lagi');
+            error: function(xhr) {
+                // Tangkap error dari backend (misal error validasi Laravel 422 atau 500)
+                let errorMessage = 'Terjadi kesalahan sistem, silakan coba lagi.';
+                
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                
+                alert('Error: ' + errorMessage);
+                
+                // Kembalikan tombol ke keadaan semula
+                btnSubmit.innerHTML = originalText;
+                btnSubmit.disabled = false;
             }
         });
     }

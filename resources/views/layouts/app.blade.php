@@ -14,6 +14,13 @@
     <!-- HEADER -->
     <header class="header">
         <div class="header-left">
+            {{-- HAMBURGER BUTTON (mobile only) --}}
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <a href="{{ route('dashboard') }}" class="logo">
                 <div class="logo-icon">
                     <i class="fas fa-wallet" style="color: #1814F3; font-size: 18px;"></i>
@@ -38,7 +45,10 @@
                 <i class="fas fa-bell" style="color: #FE5C73; font-size: 20px;"></i>
             </a>
             <div class="user-avatar">
-                <img src="https://via.placeholder.com/60" alt="User">
+                <img src="{{ auth()->user()->avatar
+                    ? asset('storage/avatars/' . auth()->user()->avatar)
+                    : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=1814F3&color=fff&size=60' }}"
+                    alt="{{ auth()->user()->name }}">
             </div>
         </div>
     </header>
@@ -50,16 +60,51 @@
             <i class="fas fa-home"></i>
             <span>Dashboard</span>
         </a>
-       <a href="{{ route('transactions.index') }}"
+
+        @if(auth()->user()->isAdmin())
+        {{-- Menu khusus Admin --}}
+        <a href="{{ route('transactions.index') }}"
             class="sidebar-item {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
             <i class="fas fa-exchange-alt"></i>
             <span>Transactions</span>
         </a>
+        <a href="{{ route('admin.products.index') }}"
+            class="sidebar-item {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+            <i class="fas fa-box-open"></i>
+            <span>Products</span>
+        </a>
+        <a href="{{ route('admin.kasir.index') }}"
+            class="sidebar-item {{ request()->routeIs('admin.kasir.*') ? 'active' : '' }}">
+            <i class="fas fa-users"></i>
+            <span>Kasir</span>
+        </a>
+        <a href="{{ route('admin.reports') }}"
+            class="sidebar-item {{ request()->routeIs('admin.reports') ? 'active' : '' }}">
+            <i class="fas fa-chart-bar"></i>
+            <span>Laporan</span>
+        </a>
+        @endif
+
         <a href="{{ route('setting') }}" class="sidebar-item {{ request()->routeIs('setting') ? 'active' : '' }}">
             <i class="fas fa-cog"></i>
             <span>Setting</span>
         </a>
+
+        {{-- ===== LOGOUT ===== --}}
+        <hr class="sidebar-divider">
+        <div class="sidebar-logout-area">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="sidebar-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </button>
+            </form>
+        </div>
     </aside>
+
+    {{-- OVERLAY BACKDROP (mobile) --}}
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
     <!-- MAIN CONTENT -->
     <main class="main-container">
@@ -67,8 +112,12 @@
     </main>
 
     <!-- CART SECTION (Fixed) -->
-     @if(request()->routeIs('dashboard'))
+    @if(request()->routeIs('dashboard'))
     <div class="cart-container" id="cartContainer">
+        {{-- Tombol tutup cart (mobile) --}}
+        <button class="cart-close-btn" id="cartCloseBtn" onclick="toggleCart()">
+            <i class="fas fa-times"></i>
+        </button>
         <div class="cart-header">
             <h3 style="margin: 0;">Orders #002</h3>
             <div class="cart-tabs">
@@ -93,7 +142,16 @@
             <button class="checkout-btn" onclick="goToCheckout()">Continue to Payment</button>
         </div>
     </div>
-@endif
+
+    {{-- FAB Keranjang (mobile only) --}}
+    <button class="cart-fab" id="cartFab" onclick="toggleCart()" aria-label="Buka Keranjang">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-fab-badge" id="cartFabBadge" style="display:none;">0</span>
+    </button>
+
+    {{-- Overlay backdrop untuk cart drawer (mobile) --}}
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    @endif
     <!-- SCRIPTS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -117,8 +175,21 @@
                     product_id: productId
                 },
                 success: function(response) {
-                    updateCart(response.cart);
-                    showNotification('Item ditambahkan ke keranjang');
+                    if (response.success) {
+                        updateCart(response.cart);
+                        showNotification('Item ditambahkan ke keranjang');
+                    } else {
+                        // success HTTP tapi backend bilang gagal
+                        showNotification(response.message || 'Gagal menambahkan item', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    // HTTP 400/500 — misalnya stok habis
+                    let msg = 'Terjadi kesalahan, silakan coba lagi.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        msg = xhr.responseJSON.message;
+                    }
+                    showNotification(msg, 'error');
                 }
             });
         }
@@ -164,10 +235,14 @@
                 const itemTotal = item.price * item.quantity;
                 total += itemTotal;
 
+                // Definisikan path gambar di sini
+                let imageSrc = item.image ? '/storage/' + item.image : 'https://via.placeholder.com/50?text=No+Image';
+
                 html += `
                     <div class="cart-item">
                         <div class="cart-item-image">
-                            <img src="${item.image ? '/storage/' + item.image : 'https://via.placeholder.com/49x50'}" alt="${item.name}">
+                            <!-- Panggil variabel imageSrc di dalam tag img -->
+                            <img src="${imageSrc}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
                         </div>
                         <div class="cart-item-details">
                             <div class="cart-item-name">${item.name}</div>
@@ -288,6 +363,66 @@
             });
         }
         }
+
+        // =========================================
+        // MOBILE: Toggle Sidebar (Hamburger Menu)
+        // =========================================
+        function toggleSidebar() {
+            const sidebar  = document.getElementById('sidebar') || document.querySelector('.sidebar');
+            const overlay  = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+            hamburger.classList.toggle('open');
+
+            // Cegah scroll body saat sidebar terbuka
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        // =========================================
+        // MOBILE: Toggle Cart Drawer
+        // =========================================
+        function toggleCart() {
+            const cart    = document.getElementById('cartContainer');
+            const overlay = document.getElementById('cartOverlay');
+            if (!cart) return;
+            cart.classList.toggle('cart-open');
+            if (overlay) overlay.classList.toggle('active');
+            document.body.classList.toggle('cart-drawer-open');
+        }
+
+        // Update badge FAB saat cart berubah
+        const _origUpdateCart = updateCart;
+        updateCart = function(cart) { 
+            _origUpdateCart(cart);
+            
+            // Sesuaikan getElementById di bawah dengan ID kodingan lo (misal: 'cartFab' atau 'cartFabBadge')
+            const badge = document.getElementById('cartFab'); 
+            
+            if (!badge) return;
+            const count = Object.keys(cart).length;
+            
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        };
+
+        // Tutup sidebar saat klik link navigasi (mobile UX)
+        document.querySelectorAll('.sidebar-item, .sidebar-logout-btn').forEach(function(link) {
+            link.addEventListener('click', function() {
+                const sidebar = document.querySelector('.sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                if (sidebar && sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                    if (overlay) overlay.classList.remove('active');
+                    document.body.classList.remove('sidebar-open');
+                }
+            });
+        });
     </script>
 
 @if (session('error'))
