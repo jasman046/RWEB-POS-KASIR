@@ -25,10 +25,27 @@ class OrderController extends Controller
 
     public function addToCart(Request $request)
     {
+        // 1. Cari produk berdasarkan ID
         $product = Product::findOrFail($request->product_id);
 
+        // 2. Ambil data keranjang dari session
         $cart = session()->get('cart', []);
 
+        // Hitung berapa jumlah produk ini yang sudah ada di keranjang sekarang
+        $currentQty = isset($cart[$product->id]) ? $cart[$product->id]['quantity'] : 0;
+
+        // ==========================================
+        // 3. VALIDASI STOK
+        // Cek apakah sisa stok cukup jika ditambah 1 lagi
+        // ==========================================
+        if (($currentQty + 1) > $product->stock) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Maaf, stok ' . $product->name . ' tidak mencukupi! (Sisa stok: ' . $product->stock . ')'
+            ], 400); // 400 Bad Request agar ditangkap oleh blok error di AJAX
+        }
+
+        // 4. Jika stok aman, proses masukkan ke keranjang
         if (isset($cart[$product->id])) {
             $cart[$product->id]['quantity']++;
         } else {
@@ -107,7 +124,7 @@ class OrderController extends Controller
         }
 
         // Card utama milik toko
-        $card = Card::find(1);
+        $card = Card::where('theme', 'gradient')->first();
 
         if (!$card) {
             return response()->json([
@@ -119,6 +136,30 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
+
+            // ==========================
+            // Validasi Stok Semua Item
+            // ==========================
+
+            foreach ($cart as $item) {
+                $product = Product::find($item['product_id']);
+
+                if (!$product) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Produk "' . $item['name'] . '" tidak ditemukan.'
+                    ], 400);
+                }
+
+                if ($product->stock < $item['quantity']) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Stok "' . $product->name . '" tidak cukup. Tersedia: ' . $product->stock . ', diminta: ' . $item['quantity']
+                    ], 400);
+                }
+            }
 
             // ==========================
             // Buat Order
@@ -134,7 +175,7 @@ class OrderController extends Controller
             ]);
 
             // ==========================
-            // Simpan Detail Order
+            // Simpan Detail Order & Kurangi Stok
             // ==========================
 
             foreach ($cart as $item) {
@@ -145,6 +186,10 @@ class OrderController extends Controller
                     'quantity'   => $item['quantity'],
                     'price'      => $item['price']
                 ]);
+
+                // Kurangi stok produk
+                Product::where('id', $item['product_id'])
+                    ->decrement('stock', $item['quantity']);
 
             }
 
