@@ -79,7 +79,7 @@
 @section('content')
 <div class="checkout-container">
     <div class="checkout-order-section">
-        <h2 class="form-section-title">Orders #002</h2>
+        <h2 class="form-section-title">Orders </h2>
         
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
             <button class="tab-btn active" id="dineInBtn" onclick="selectOrderType('Dine In')">Dine In</button>
